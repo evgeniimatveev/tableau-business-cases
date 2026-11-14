@@ -6,6 +6,8 @@
 
 ![Medal frequency histogram](img/viz-medal-frequency-histogram.png)
 
+**[Live on Tableau Public](https://public.tableau.com/app/profile/evgenii.matveev/viz/LODPlanning_17929971484250/Sheet7)**
+
 ## Why LOD
 The chart needs *athletes* on the Y axis and *medals per athlete* on the X axis. Medals per athlete is an aggregate that has to become a dimension, and a FIXED LOD does exactly that.
 

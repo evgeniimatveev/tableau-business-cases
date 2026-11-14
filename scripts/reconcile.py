@@ -79,5 +79,24 @@ check("04 worldbank", "countries", w["countries"], r["countries"])
 check("04 worldbank", "regions", w["regions"], r["regions"])
 check("04 worldbank", "countries_null_gdp", w["countries_null_gdp"], r["null_gdp"])
 
+# ---- case 05: Jordan free throws vs baseline season (EXCLUDE LOD)
+j = ctl["jordan"]
+r = q.jordan(con, q.csv(RAW / "Michael Jordan Career.csv"), j["baseline"])
+for key in ("rows", "null_ft_rows", "seasons", "total_ft", "playoff_ft"):
+    check("05 jordan", key, j[key], r[key])
+for season, exp in j["ft_by_season"].items():
+    check("05 jordan", f"FT {season}", exp, r["ft_by_season"].get(season, -1))
+for season, exp in j["diff_from_baseline"].items():
+    check("05 jordan", f"diff {season}", exp, r["diff"].get(season, -1))
+
+# the parameter is a dropdown of all 15 seasons: for EVERY choice the baseline bar is 0 and every other bar is FT - baseline FT
+# (self-consistency of the toggle; only the 1984-85 values above were read off Tableau)
+for base in j["ft_by_season"]:
+    rb = q.jordan(con, q.csv(RAW / "Michael Jordan Career.csv"), base)
+    ok = rb["diff"][base] == 0 and all(
+        rb["diff"][s] == rb["ft_by_season"][s] - rb["ft_by_season"][base] for s in rb["ft_by_season"]
+    )
+    check("05 jordan", f"toggle baseline {base}", 1, int(ok))
+
 print(f"\n{sum(results)}/{len(results)} checks passed")
 sys.exit(0 if all(results) else 1)

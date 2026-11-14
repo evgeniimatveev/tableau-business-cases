@@ -59,3 +59,11 @@ files:
     url: https://data.worldbank.org/
     license: CC BY 4.0 by default for World Bank datasets (attribution required)
     license_status: verified for the default terms, not for this specific extract
+  - case: 05
+    file: Michael Jordan Career.csv
+    bytes: 144786
+    sha256_16: ed6bc55743b2f547
+    origin: course material only (original source not stated by the course)
+    url: null
+    license: unknown, do not redistribute
+    license_status: unknown

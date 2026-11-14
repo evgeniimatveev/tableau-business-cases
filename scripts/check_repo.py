@@ -30,10 +30,10 @@ passed.append(f"manifest lists {len(manifest['files'])} files with origin, licen
 
 # 2. controls.yaml: every case has its expected values
 controls = yaml.safe_load((ROOT / "controls.yaml").read_text(encoding="utf-8"))
-for key in ("olympics", "olist_cohort", "lebron", "worldbank"):
+for key in ("olympics", "olist_cohort", "lebron", "worldbank", "jordan"):
     if not controls.get(key):
         problems.append(f"controls.yaml: section `{key}` is missing or empty")
-passed.append("controls.yaml has the 4 case sections")
+passed.append("controls.yaml has the 5 case sections")
 
 # 3. every case folder has a README, and every local link/image in any README resolves
 cases = sorted(p for p in (ROOT / "cases").iterdir() if p.is_dir())

@@ -58,3 +58,18 @@ def test_worldbank_restricts_to_one_year_and_ignores_null_gdp(con):
     assert glob_x == pytest.approx(60.0)  # share of the world
     assert reg_x == pytest.approx(600 / 900 * 100)  # share of region A (the NULL country is not in the total)
     assert r["shares"]["Z"] == (None, None)  # NULL GDP gives a NULL share, not 0%
+
+
+def test_jordan_baseline_includes_playoffs_and_difference_is_zero_on_its_own_row(con):
+    r = q.jordan(con, q.csv(FX / "jordan.csv"), "1984-85")
+    # The baseline season is Regular 5 + Playoffs 3 = 8 (a regular-season-only baseline would be 5 and shift every bar by 3).
+    assert r["ft_by_season"] == {"1984-85": 8, "1985-96": 2, "2001-02": 4}
+    assert r["diff"] == {"1984-85": 0, "1985-96": -6, "2001-02": -4}
+    assert r["playoff_ft"] == 3
+
+
+def test_jordan_switching_the_baseline_moves_every_bar_and_null_rows_are_not_zero_games(con):
+    r = q.jordan(con, q.csv(FX / "jordan.csv"), "2001-02")
+    assert r["diff"] == {"1984-85": 4, "1985-96": -2, "2001-02": 0}  # LOD = 4 on every row
+    assert (r["rows"], r["null_ft_rows"]) == (6, 2)  # NULL rows (Did Not Dress) are rows but not games with free throws
+    assert r["total_ft"] == 14  # SUM ignores NULL

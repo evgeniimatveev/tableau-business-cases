@@ -1,0 +1,18 @@
+# Tableau temp / lock files
+*.hyper
+TableauTemp/
+~*.twbr
+*.twb Files/
+*.twbr
+# raw course data (see data/manifest.yaml for sources + checksums)
+data/raw/
+# python
+.venv/
+__pycache__/
+.duckdb
+*.duckdb
+_inbox/
+
+# not published: working notes (private), LeBron workbook (data license unknown)
+CASES_working_notes.md
+cases/03-lebron-weekly-kpi/workbook.twbx

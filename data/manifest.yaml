@@ -1,0 +1,61 @@
+# Raw datasets: NOT committed (data/raw/ is gitignored). Verify with sha256 (first 16 hex chars shown).
+# `license_status`: verified = read on the official page; unverified = from a secondary source, check before publishing.
+# All files were obtained from the SuperDataScience course "Tableau Business Cases: LOD Expressions" (course subsets, may differ from the originals).
+downloaded: 2026-11-13
+files:
+  - case: 01
+    file: athlete_events.csv
+    bytes: 41500688
+    sha256_16: 1751e89b509dd8c0
+    origin: Kaggle "120 years of Olympic history: athletes and results" (heesoo37); scraped from sports-reference.com, May 2018
+    url: https://www.kaggle.com/datasets/heesoo37/120-years-of-olympic-history-athletes-and-results
+    license: Public Domain (per a third-party mirror)
+    license_status: unverified
+  - case: 01
+    file: noc_regions.csv
+    bytes: 3595
+    sha256_16: d9be65009dd12851
+    origin: same Kaggle dataset
+    url: https://www.kaggle.com/datasets/heesoo37/120-years-of-olympic-history-athletes-and-results
+    license: Public Domain (per a third-party mirror)
+    license_status: unverified
+  - case: 02
+    file: olist_customers_dataset.csv
+    bytes: 917347
+    sha256_16: adda3813f3711ae0
+    origin: Kaggle "Brazilian E-Commerce Public Dataset by Olist" (course subset)
+    url: https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce
+    license: CC BY-NC-SA 4.0 (non-commercial, share-alike)
+    license_status: unverified
+  - case: 02
+    file: olist_order_items_dataset.csv
+    bytes: 1335950
+    sha256_16: 207f029c70df958e
+    origin: same Olist dataset
+    url: https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce
+    license: CC BY-NC-SA 4.0
+    license_status: unverified
+  - case: 02
+    file: olist_orders_dataset.csv
+    bytes: 1518727
+    sha256_16: c8e8ce19af42855b
+    origin: same Olist dataset
+    url: https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce
+    license: CC BY-NC-SA 4.0
+    license_status: unverified
+  - case: 03
+    file: LeBron James Career.csv
+    bytes: 181506
+    sha256_16: a1c1da252821cd2b
+    origin: course material only (original source not stated by the course)
+    url: null
+    license: unknown, do not redistribute
+    license_status: unknown
+  - case: 04
+    file: WorldBank Data.xlsx
+    bytes: 1123912
+    sha256_16: 92d7e526fd939c90
+    origin: World Bank indicators (course extract, 211 countries x 1960-2018)
+    url: https://data.worldbank.org/
+    license: CC BY 4.0 by default for World Bank datasets (attribution required)
+    license_status: verified for the default terms, not for this specific extract

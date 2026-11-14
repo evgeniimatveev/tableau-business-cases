@@ -1,0 +1,51 @@
+# Control values read from Tableau (source of truth: SQL in scripts/reconcile.py must reproduce them).
+olympics:                      # case 01
+  total_rows: 271116
+  athletes_with_5_medals: 215
+  athletes_with_6_medals: 113
+  athletes_with_7plus_medals: 150
+olist_cohort:                  # case 02 (sum of price, cohort = MIN purchase year per customer_unique_id over ALL orders)
+  total: 1443090
+  matrix:                      # [cohort_year, order_year, sales]
+    - [2016, 2016, 285180]
+    - [2016, 2017, 134585]
+    - [2016, 2018, 179039]
+    - [2017, 2017, 389510]
+    - [2017, 2018, 183227]
+    - [2018, 2018, 271549]
+worldbank:                     # case 04 (Year = 2018 only; file holds 1960-2018)
+  year: 2018
+  total_gdp_usd: 83874523992955
+  france_share_pct: 3.31
+  countries: 211
+  regions: 7
+  countries_null_gdp: 28
+  china_share_global_pct: 16.21
+  usa_share_global_pct: 24.44
+  china_share_of_region_pct: 53.883228   # East Asia & Pacific; = table calc / {FIXED [Region]} LOD
+  japan_share_of_region_pct: 19.691150
+lebron:                        # case 03: distinct weeks per category per season, thresholds AVG=20, Expert=30 (Tableau default of the saved parameters)
+  thresholds: {expert: 30, above_average: 20}
+  total_weeks: 504
+  overall_mean_game_score: 22.45         # = reference line in the Challenge chart
+  null_game_scores: 99
+  weeks_with_all_null_game_score: 10   # fall into ELSE = 'Below Average' (no data!)
+  totals: {Expert: 33, Above Average: 311, Below Average: 160}
+  per_season:                  # season: [Expert, Above Average, Below Average]
+    "2003-04": [0, 2, 23]
+    "2004-05": [0, 19, 6]
+    "2005-06": [2, 18, 10]
+    "2006-07": [0, 17, 16]
+    "2007-08": [4, 19, 7]
+    "2008-09": [5, 22, 4]
+    "2009-10": [5, 19, 5]
+    "2010-11": [0, 23, 11]
+    "2011-12": [3, 18, 5]
+    "2012-13": [1, 28, 5]
+    "2013-14": [2, 22, 10]
+    "2014-15": [0, 17, 17]
+    "2015-16": [2, 19, 14]
+    "2016-17": [5, 22, 7]
+    "2017-18": [4, 25, 5]
+    "2018-19": [0, 13, 13]
+    "2019-20": [0, 8, 2]

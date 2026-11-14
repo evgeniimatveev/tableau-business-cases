@@ -8,6 +8,7 @@ Four Tableau case studies on **Level of Detail (LOD) expressions**, where every 
   <img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white"/>
   <img src="https://img.shields.io/badge/uv-runner-DE5FE9?style=flat-square&logo=uv&logoColor=white"/>
   <img src="https://img.shields.io/badge/SQL_checks-41%2F41_passing-2EA44F?style=flat-square"/>
+  <a href=".github/workflows/ci.yml"><img src="https://github.com/evgeniimatveev/tableau-business-cases/actions/workflows/ci.yml/badge.svg"/></a>
 </p>
 
 > *"Tableau dashboards tested against SQL: 4 cases, 41 numeric checks, 6 gotchas the dashboards would never have told me about."*
@@ -86,6 +87,20 @@ uv run scripts/reconcile.py        # prints OK/FAIL per check, exit code 1 on an
 
 `reconcile.py` is a self-contained [uv script](https://docs.astral.sh/uv/guides/scripts/) (DuckDB + PyYAML declared inline), so there is no environment to set up.
 
+### Two layers of checks
+
+| Layer | Where it runs | What it proves |
+|---|---|---|
+| **41 reconcile checks** on the real data | locally (`uv run scripts/reconcile.py`) | every number on the dashboards is reproduced in SQL |
+| **SQL logic tests** on tiny hand-computed fixtures + repo checks | **GitHub Actions on every push** (badge above) | the SQL itself is right: each test guards one gotcha |
+
+CI cannot download the Kaggle and course files, so it does not pretend to: it runs `pytest` on fixtures of 5 to 6 rows (Sunday weeks, `LEFT JOIN` cohorts, NULL weeks, ID vs Name, one-year filter) plus a hygiene check (manifest complete, controls present, README links resolve). The tests were mutation-checked: switching the SQL to Monday weeks, an `INNER JOIN` or grouping by name each makes a test fail.
+
+```bash
+uv run --with pytest --with duckdb --with pyyaml pytest -v   # the logic tests
+uv run scripts/check_repo.py                                  # manifest / controls / links
+```
+
 ---
 
 ## Repo structure
@@ -95,7 +110,13 @@ uv run scripts/reconcile.py        # prints OK/FAIL per check, exit code 1 on an
 ├── README.md
 ├── controls.yaml                 # expected values read off the Tableau dashboards
 ├── scripts/
-│   └── reconcile.py              # recomputes every metric in DuckDB and compares
+│   ├── queries.py                # the SQL of every case, as functions over table expressions
+│   ├── reconcile.py              # runs queries.py on the real data and compares to controls.yaml
+│   └── check_repo.py             # manifest / controls / README link checks
+├── tests/
+│   ├── test_queries.py           # one test per gotcha, on tiny fixtures
+│   └── fixtures/                 # hand-computed CSVs (5 to 6 rows each)
+├── .github/workflows/ci.yml      # pytest + repo checks, results in the Job Summary
 ├── data/
 │   └── manifest.yaml             # sources, licenses, sha256 (raw files are gitignored)
 └── cases/

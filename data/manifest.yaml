@@ -7,7 +7,7 @@ files:
     file: athlete_events.csv
     bytes: 41500688
     sha256_16: 1751e89b509dd8c0
-    origin: Kaggle "120 years of Olympic history: athletes and results" (heesoo37); scraped from sports-reference.com, May 2018
+    origin: 'Kaggle "120 years of Olympic history: athletes and results" (heesoo37); scraped from sports-reference.com, May 2018'
     url: https://www.kaggle.com/datasets/heesoo37/120-years-of-olympic-history-athletes-and-results
     license: Public Domain (per a third-party mirror)
     license_status: unverified

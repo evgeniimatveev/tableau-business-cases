@@ -1,0 +1,6 @@
+order_id,customer_id,order_status,order_purchase_timestamp
+A,c1,canceled,5/3/16 10:00
+B,c2,delivered,12/7/17 9:30
+C,c3,delivered,1/2/17 8:00
+D,c4,delivered,20/11/18 14:15
+E,c5,delivered,3/4/18 12:00

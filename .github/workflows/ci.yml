@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash   # bash with pipefail, so a failing pytest is not hidden by tee
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.3.3
+
+      - name: SQL logic tests (tiny fixtures, no raw data needed)
+        run: |
+          {
+            echo "## SQL logic tests"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          uv run --with pytest --with duckdb --with pyyaml pytest -v 2>&1 | tee -a "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Repo checks (manifest, controls, README links)
+        run: uv run scripts/check_repo.py | tee -a "$GITHUB_STEP_SUMMARY"

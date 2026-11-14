@@ -85,3 +85,30 @@ select country, 100 * gdp / gt, 100 * gdp / rt from r"""
         ).fetchall()
     }
     return {"total": total, "countries": n, "regions": reg, "null_gdp": nul, "shares": shares}
+
+
+# ---- case 05: Jordan free throws vs a baseline season (EXCLUDE LOD). One row per season, regular + playoffs together.
+# Mirrors Tableau: _FT Selected_season = IIF(Season = baseline, FT, 0); LOD = { EXCLUDE Season : SUM(that) } is the
+# same number on every row; difference = SUM(FT) - LOD. SUM ignores NULL FT (rows like "Did Not Dress").
+def jordan(con, src, baseline):
+    t = f"""t as (select Season, Stage, try_cast("Free Throws" as double) ft from {src})"""
+    rows = con.execute(
+        f"""with {t},
+s as (select Season, sum(ft) ft, sum(case when Season = ? then ft else 0 end) sel from t group by Season)
+select Season, ft, ft - sum(sel) over () from s order by Season""",
+        [baseline],
+    ).fetchall()
+    n, nul, seasons, total, playoffs = con.execute(
+        f"""with {t}
+select count(*), count(*) filter (ft is null), count(distinct Season), sum(ft),
+       sum(ft) filter (Stage = 'Playoffs') from t"""
+    ).fetchone()
+    return {
+        "ft_by_season": {r[0]: r[1] for r in rows},
+        "diff": {r[0]: r[2] for r in rows},
+        "rows": n,
+        "null_ft_rows": nul,
+        "seasons": seasons,
+        "total_ft": total,
+        "playoff_ft": playoffs,
+    }

@@ -49,3 +49,43 @@ lebron:                        # case 03: distinct weeks per category per season
     "2017-18": [4, 25, 5]
     "2018-19": [0, 13, 13]
     "2019-20": [0, 8, 2]
+
+jordan:                        # case 05: SUM(Free Throws) per season vs baseline season, { EXCLUDE [Season] : SUM(IIF(Season = baseline, FT, 0)) }
+  baseline: "1984-85"          # parameter value in the screenshots (the saved .twbx opens on 2001-02)
+  rows: 1254
+  null_ft_rows: 3              # Did Not Dress / Not With Team / Inactive (2001-02)
+  seasons: 15
+  total_ft: 8790
+  playoff_ft: 1463             # playoffs are inside every season total
+  ft_by_season:
+    "1984-85": 678
+    "1985-96": 139
+    "1986-87": 868
+    "1987-88": 809
+    "1988-89": 857
+    "1989-90": 726
+    "1990-91": 696
+    "1991-92": 653
+    "1992-93": 612
+    "1994-95": 173
+    "1995-96": 701
+    "1996-97": 603
+    "1997-98": 746
+    "2001-02": 263
+    "2002-03": 266
+  diff_from_baseline:
+    "1984-85": 0
+    "1985-96": -539
+    "1986-87": 190
+    "1987-88": 131
+    "1988-89": 179
+    "1989-90": 48
+    "1990-91": 18
+    "1991-92": -25
+    "1992-93": -66
+    "1994-95": -505
+    "1995-96": 23
+    "1996-97": -75
+    "1997-98": 68
+    "2001-02": -415
+    "2002-03": -412

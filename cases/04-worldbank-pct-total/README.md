@@ -6,6 +6,8 @@
 
 ![Global share by country](img/viz-challenge-global-share-map.png)
 
+**[Live on Tableau Public](https://public.tableau.com/app/profile/evgenii.matveev/viz/LOD_Percent_of_Total/VIZ)** (the VIZ sheet, filtered by region)
+
 ## Formulas
 ```
 _Sum gdp by all:   { FIXED : SUM([Gdp (Usd)]) }                  -- world total, 83,874,523,992,955

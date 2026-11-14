@@ -1,5 +1,7 @@
 # 📐 Tableau LOD Cases — Verified Against SQL
 
+<p align="center"><img src="assets/banner.jpg" alt="Tableau bar chart equals DuckDB: dashboards verified in SQL"/></p>
+
 Five Tableau case studies on **Level of Detail (LOD) expressions**, where every number on every dashboard is **recomputed in SQL (DuckDB) and compared automatically**. Not "I built a chart" but "the chart is provably right, and here is where Tableau quietly misleads you".
 
 <p align="center">

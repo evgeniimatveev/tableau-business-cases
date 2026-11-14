@@ -88,11 +88,27 @@ Each Tableau result becomes a control value; the same metric is recomputed in pl
 ```bash
 git clone https://github.com/evgeniimatveev/tableau-business-cases
 cd tableau-business-cases
-# put the course CSVs / xlsx into data/raw/ (sources + checksums: data/manifest.yaml)
+# put the datasets into data/raw/ (see "Get the data" below)
 uv run scripts/reconcile.py        # prints OK/FAIL per check, exit code 1 on any mismatch
 ```
 
 `reconcile.py` is a self-contained [uv script](https://docs.astral.sh/uv/guides/scripts/) (DuckDB + PyYAML declared inline), so there is no environment to set up.
+
+### Get the data
+
+The raw files are **not in the repo** (size and unclear licenses); `data/raw/` is gitignored. All five came from the SuperDataScience course *Tableau Business Cases: LOD Expressions* and are course subsets, so they may differ from the public originals. The checksums in [`data/manifest.yaml`](data/manifest.yaml) are of the course versions.
+
+| Case | Files for `data/raw/` | Where to get them |
+|---|---|---|
+| 01 Olympics | `athlete_events.csv`, `noc_regions.csv` | Kaggle: [120 years of Olympic history](https://www.kaggle.com/datasets/heesoo37/120-years-of-olympic-history-athletes-and-results) (download the zip, unpack both files) |
+| 02 Olist | `olist_orders_dataset.csv`, `olist_customers_dataset.csv`, `olist_order_items_dataset.csv` | Kaggle: [Brazilian E-Commerce by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (3 of the 9 files) |
+| 03 LeBron | `LeBron James Career.csv` | Course material only, no public source. The Tableau Public viz has the data embedded |
+| 04 World GDP | `WorldBank Data.xlsx` | [World Bank Open Data](https://data.worldbank.org/) indicators, 211 countries x 1960-2018 (the course extract; a fresh download will differ) |
+| 05 Jordan | `Michael Jordan Career.csv` | Course material only, no public source. The Tableau Public viz has the data embedded |
+
+Then check each file against the manifest (first 16 hex chars of sha256): `python -c "import hashlib,sys;print(hashlib.sha256(open(sys.argv[1],'rb').read()).hexdigest()[:16])" "data/raw/<file>"`.
+
+`reconcile.py` runs only the cases whose files are present and prints `SKIP case NN` for the rest, so you can reproduce any subset. If a public download differs from the course file, the numbers can legitimately differ too: that is what the checksum is for.
 
 ### Two layers of checks
 

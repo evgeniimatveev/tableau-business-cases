@@ -1,26 +1,130 @@
-# Tableau business cases: LOD expressions, verified against SQL
+# 📐 Tableau LOD Cases — Verified Against SQL
 
-Work in progress. Each case has the question, the Tableau formulas, the gotchas found, and the same numbers reproduced in SQL (DuckDB).
+Four Tableau case studies on **Level of Detail (LOD) expressions**, where every number on every dashboard is **recomputed in SQL (DuckDB) and compared automatically**. Not "I built a chart" but "the chart is provably right, and here is where Tableau quietly misleads you".
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Tableau-LOD_Expressions-E97627?style=flat-square&logo=tableau&logoColor=white"/>
+  <img src="https://img.shields.io/badge/DuckDB-SQL_reconcile-FFF000?style=flat-square&logo=duckdb&logoColor=black"/>
+  <img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white"/>
+  <img src="https://img.shields.io/badge/uv-runner-DE5FE9?style=flat-square&logo=uv&logoColor=white"/>
+  <img src="https://img.shields.io/badge/SQL_checks-41%2F41_passing-2EA44F?style=flat-square"/>
+</p>
+
+> *"Tableau dashboards tested against SQL: 4 cases, 41 numeric checks, 6 gotchas the dashboards would never have told me about."*
+
+---
+
+## The 4 cases
 
 | # | Case | Technique | Headline number |
 |---|---|---|---|
-| 01 | [Olympic medals frequency](cases/01-olympics-medal-frequency) | FIXED LOD per athlete | 215 athletes with 5 medals |
-| 02 | [Olist returning customers](cases/02-olist-cohort) | FIXED LOD cohort (MIN order date) | 1,443,090 total |
-| 03 | [LeBron weekly performance KPI](cases/03-lebron-weekly-kpi) | FIXED LOD + parameters | 504 weeks, 10 with no data |
-| 04 | [World regional GDP share](cases/04-worldbank-pct-total) | FIXED LOD percent of total | 83.9T USD (2018) |
+| 01 | [Olympic medals frequency](cases/01-olympics-medal-frequency) | `FIXED` LOD per athlete → histogram | 215 athletes with exactly 5 medals |
+| 02 | [Olist returning customers](cases/02-olist-cohort) | `FIXED` LOD cohort (`MIN` order date) | $1,443,090 total across 6 cohort cells |
+| 03 | [LeBron weekly KPI](cases/03-lebron-weekly-kpi) | `FIXED` LOD + parameters | 504 weeks bucketed, 10 with no data |
+| 04 | [World GDP share](cases/04-worldbank-pct-total) | `FIXED` LOD percent of total, region LOD | $83.9T world GDP (2018), China 16.2% |
 
-## Verify the numbers
-```
-uv run scripts/reconcile.py     # recomputes every Tableau control value in DuckDB (41 checks)
-```
-Control values live in `controls.yaml`, and each case README lists the gotchas the SQL check exposed.
+<details>
+<summary>📸 Screenshots</summary>
 
-Raw data is not in the repo: see `data/manifest.yaml`.
+| Olympics: medals per athlete | Olist: cohort dashboard |
+|---|---|
+| ![Olympics](cases/01-olympics-medal-frequency/img/viz-medal-frequency-histogram.png) | ![Olist](cases/02-olist-cohort/img/dashboard.png) |
+
+| LeBron: weeks per category per season | World GDP: global share |
+|---|---|
+| ![LeBron](cases/03-lebron-weekly-kpi/img/viz-weeks-by-category-per-season.png) | ![World](cases/04-worldbank-pct-total/img/viz-challenge-global-share-map.png) |
+
+</details>
+
+---
+
+## What makes it different: the SQL check
+
+```mermaid
+flowchart LR
+    A["📦 Course datasets<br/>Olympics · Olist · LeBron · World Bank"] -->|sha256 in manifest| B[("🗂️ data/raw<br/>gitignored")]
+    A -->|extract| T["📊 Tableau workbooks<br/>.twbx"]
+    T -->|"numbers read off the dashboard"| C["📝 controls.yaml<br/>expected values"]
+    B -->|"SQL recompute"| D["🦆 DuckDB<br/>scripts/reconcile.py"]
+    C -->|compare| D
+    D -->|"41 checks"| E{"✅ match?"}
+    E -->|yes| F["Case README<br/>numbers verified"]
+    E -->|no| G["🐞 Gotcha found<br/>documented in the case"]
+
+    style A fill:#e74c3c,color:#fff,stroke:none
+    style T fill:#E97627,color:#fff,stroke:none
+    style D fill:#1abc9c,color:#000,stroke:none
+    style E fill:#3498db,color:#fff,stroke:none
+    style G fill:#9b59b6,color:#fff,stroke:none
+```
+
+Each Tableau result becomes a control value; the same metric is recomputed in plain SQL from the raw files; the script exits non-zero if they diverge. Disagreements are where the interesting bugs live.
+
+---
+
+## 🐞 Gotchas the SQL check exposed
+
+| Case | What Tableau showed | What was really going on |
+|---|---|---|
+| 02 Olist | Cohort sales 389,510 / 271,549 | A first SQL version with an `INNER JOIN` gave 390,300 / 272,147. The cohort date is the `MIN` over **all** orders, including canceled ones with no items, so the join must be `LEFT`. |
+| 03 LeBron | 160 weeks "Below Average" | 10 of them have **no Game Score at all**: `AVG` is NULL, no comparison is true, `ELSE` swallows them. The honest split is 150 + 10 "No data". |
+| 03 LeBron | Same weeks, different SQL counts | Tableau weeks start on **Sunday**, DuckDB's `date_trunc('week')` on Monday. SQL needs `date_trunc('week', d + 1) - 1`. |
+| 04 World GDP | China 53.9% on the filtered map | That is a table calc (share of the *filtered view*). The FIXED LOD says 16.2% (share of the *world*). Same field, two denominators. |
+| 04 World GDP | 28 countries show "Null", not 0% | `SUM` ignores NULL GDP: those countries are missing from the total, not zero. Without the Year filter the total would be 1.63 quadrillion. |
+| 01 Olympics | `CNT(Name)` = 30 for Phelps | Counts **rows**, not medals (28). Group by `ID`, never `Name`; and `"NA"` is a text string in the CSV, not NULL. |
+
+---
+
+## Run it
+
+```bash
+git clone https://github.com/evgeniimatveev/tableau-business-cases
+cd tableau-business-cases
+# put the course CSVs / xlsx into data/raw/ (sources + checksums: data/manifest.yaml)
+uv run scripts/reconcile.py        # prints OK/FAIL per check, exit code 1 on any mismatch
+```
+
+`reconcile.py` is a self-contained [uv script](https://docs.astral.sh/uv/guides/scripts/) (DuckDB + PyYAML declared inline), so there is no environment to set up.
+
+---
+
+## Repo structure
+
+```
+.
+├── README.md
+├── controls.yaml                 # expected values read off the Tableau dashboards
+├── scripts/
+│   └── reconcile.py              # recomputes every metric in DuckDB and compares
+├── data/
+│   └── manifest.yaml             # sources, licenses, sha256 (raw files are gitignored)
+└── cases/
+    ├── 01-olympics-medal-frequency/   README · workbook.twbx · img/
+    ├── 02-olist-cohort/               README · workbook.twbx · img/
+    ├── 03-lebron-weekly-kpi/          README · img/            (workbook not published)
+    └── 04-worldbank-pct-total/        README · workbook.twbx · img/
+```
+
+## Tech stack
+
+| Layer | Tool |
+|---|---|
+| BI | Tableau (LOD `FIXED`, parameters, table calcs, dashboards) |
+| Verification | DuckDB SQL (window functions, `strptime`, `read_xlsx`) |
+| Runner | Python + `uv` (inline script dependencies) |
+| Data provenance | `manifest.yaml` with sha256 per file |
+
+---
 
 ## Data and attribution
+
 - Olist: [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce), CC BY-NC-SA 4.0 (non-commercial, share-alike).
 - Olympics: [120 years of Olympic history](https://www.kaggle.com/datasets/heesoo37/120-years-of-olympic-history-athletes-and-results) (Kaggle, scraped from sports-reference.com).
 - World Bank indicators: [data.worldbank.org](https://data.worldbank.org/), CC BY 4.0 by default.
-- LeBron James career stats: course material; the workbook for case 03 is not published here.
+- LeBron James career stats: course material; the case 03 workbook is not published here.
 
-Practice built on the SuperDataScience course "Tableau Business Cases: LOD Expressions". Checksums and sources are in `data/manifest.yaml`.
+Practice built on the SuperDataScience course *Tableau Business Cases: LOD Expressions*.
+
+---
+
+*Built with Claude Code · Built by [Evgenii Matveev](https://github.com/evgeniimatveev)*

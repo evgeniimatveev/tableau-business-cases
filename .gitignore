@@ -13,6 +13,5 @@ __pycache__/
 *.duckdb
 _inbox/
 
-# not published: working notes (private), LeBron workbook (data license unknown)
+# not published: working notes (private)
 CASES_working_notes.md
-cases/03-lebron-weekly-kpi/workbook.twbx

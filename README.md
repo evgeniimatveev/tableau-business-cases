@@ -122,7 +122,7 @@ uv run scripts/check_repo.py                                  # manifest / contr
 └── cases/
     ├── 01-olympics-medal-frequency/   README · workbook.twbx · img/
     ├── 02-olist-cohort/               README · workbook.twbx · img/
-    ├── 03-lebron-weekly-kpi/          README · img/            (workbook not in repo)
+    ├── 03-lebron-weekly-kpi/          README · workbook.twbx · img/
     └── 04-worldbank-pct-total/        README · workbook.twbx · img/
 ```
 
@@ -142,7 +142,7 @@ uv run scripts/check_repo.py                                  # manifest / contr
 - Olist: [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce), CC BY-NC-SA 4.0 (non-commercial, share-alike).
 - Olympics: [120 years of Olympic history](https://www.kaggle.com/datasets/heesoo37/120-years-of-olympic-history-athletes-and-results) (Kaggle, scraped from sports-reference.com).
 - World Bank indicators: [data.worldbank.org](https://data.worldbank.org/), CC BY 4.0 by default.
-- LeBron James career stats: course material; the case 03 workbook is not in this repo (license unclear), only the [Tableau Public viz](https://public.tableau.com/app/profile/evgenii.matveev/viz/WeeklyPerformanceKPI/TheChallenge).
+- LeBron James career stats: course material, published here only as the case 03 workbook (`.twbx`) and the [Tableau Public viz](https://public.tableau.com/app/profile/evgenii.matveev/viz/WeeklyPerformanceKPI/TheChallenge); the raw CSV is not redistributed.
 
 Practice built on the SuperDataScience course *Tableau Business Cases: LOD Expressions*.
 

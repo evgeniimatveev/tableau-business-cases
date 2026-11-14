@@ -21,7 +21,7 @@ Four Tableau case studies on **Level of Detail (LOD) expressions**, where every 
 |---|---|---|---|---|
 | 01 | [Olympic medals frequency](cases/01-olympics-medal-frequency) | `FIXED` LOD per athlete → histogram | 215 athletes with exactly 5 medals | [Tableau Public](https://public.tableau.com/app/profile/evgenii.matveev/viz/LODPlanning_17929971484250/Sheet7) |
 | 02 | [Olist returning customers](cases/02-olist-cohort) | `FIXED` LOD cohort (`MIN` order date) | $1,443,090 total across 6 cohort cells | [Tableau Public](https://public.tableau.com/app/profile/evgenii.matveev/viz/LOD_cohoranalysishmdashboard/Dashboard1) |
-| 03 | [LeBron weekly KPI](cases/03-lebron-weekly-kpi) | `FIXED` LOD + parameters | 504 weeks bucketed, 10 with no data | not published |
+| 03 | [LeBron weekly KPI](cases/03-lebron-weekly-kpi) | `FIXED` LOD + parameters | 504 weeks bucketed, 10 with no data | [Tableau Public](https://public.tableau.com/app/profile/evgenii.matveev/viz/WeeklyPerformanceKPI/TheChallenge) |
 | 04 | [World GDP share](cases/04-worldbank-pct-total) | `FIXED` LOD percent of total, region LOD | $83.9T world GDP (2018), China 16.2% | [Tableau Public](https://public.tableau.com/app/profile/evgenii.matveev/viz/LOD_Percent_of_Total/VIZ) |
 
 <details>
@@ -122,7 +122,7 @@ uv run scripts/check_repo.py                                  # manifest / contr
 └── cases/
     ├── 01-olympics-medal-frequency/   README · workbook.twbx · img/
     ├── 02-olist-cohort/               README · workbook.twbx · img/
-    ├── 03-lebron-weekly-kpi/          README · img/            (workbook not published)
+    ├── 03-lebron-weekly-kpi/          README · img/            (workbook not in repo)
     └── 04-worldbank-pct-total/        README · workbook.twbx · img/
 ```
 
@@ -142,7 +142,7 @@ uv run scripts/check_repo.py                                  # manifest / contr
 - Olist: [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce), CC BY-NC-SA 4.0 (non-commercial, share-alike).
 - Olympics: [120 years of Olympic history](https://www.kaggle.com/datasets/heesoo37/120-years-of-olympic-history-athletes-and-results) (Kaggle, scraped from sports-reference.com).
 - World Bank indicators: [data.worldbank.org](https://data.worldbank.org/), CC BY 4.0 by default.
-- LeBron James career stats: course material; the case 03 workbook is not published here.
+- LeBron James career stats: course material; the case 03 workbook is not in this repo (license unclear), only the [Tableau Public viz](https://public.tableau.com/app/profile/evgenii.matveev/viz/WeeklyPerformanceKPI/TheChallenge).
 
 Practice built on the SuperDataScience course *Tableau Business Cases: LOD Expressions*.
 

@@ -6,6 +6,8 @@
 
 ![Distinct weeks per category per season](img/viz-weeks-by-category-per-season.png)
 
+**[Live on Tableau Public](https://public.tableau.com/app/profile/evgenii.matveev/viz/WeeklyPerformanceKPI/TheChallenge)**
+
 ## Formulas
 ```
 _week_start:                  DATETRUNC('week', [Date])

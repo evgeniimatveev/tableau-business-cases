@@ -6,6 +6,8 @@
 
 ![Dashboard: map filter and cohort charts](img/dashboard.png)
 
+**[Live on Tableau Public](https://public.tableau.com/app/profile/evgenii.matveev/viz/LOD_cohoranalysishmdashboard/Dashboard1)**
+
 ## The LOD
 ```
 Cohort date = { FIXED [Customer Unique Id] : MIN([Order Purchase Timestamp]) }
